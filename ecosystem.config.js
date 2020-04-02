@@ -10,10 +10,16 @@ module.exports = {
     watch: false,
     max_memory_restart: '500M',
     env: {
-      NODE_ENV: 'dev'
+      NODE_ENV: 'dev',
+      HOSTNAME: "http://localhost:3000",
+      APPLICATION_PORT: 3000,
+      UNIQUE_STRINGS_LENGTH: 7
     },
     env_production: {
-      NODE_ENV: 'prod'
+      NODE_ENV: 'prod',
+      HOSTNAME: "http://link.edouardcourty.fr",
+      APPLICATION_PORT: 3001,
+      UNIQUE_STRINGS_LENGTH: 7
     }
   }],
 
