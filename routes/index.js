@@ -5,6 +5,7 @@ let { generateId, normalizeUrl } = require("../lib/utils");
 let Link = require("../models/Link");
 
 router.get('/:uniqueId', (req, res, next) => {
+  if (!req.params.uniqueId) return next();
   Link.findOne({ "uniqueId": req.params.uniqueId })
     .then(async doc => {
       const url = doc.originalLink;
@@ -20,7 +21,6 @@ router.get("/", (req, res, next) => {
   res.render("index", {
     title: "Shorten a new link"
   });
-  next()
 });
 
 router.post("/", (req, res, next) => {

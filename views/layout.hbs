@@ -3,6 +3,9 @@
   <head>
     <title>{{title}}</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+      {{#if stylesheet}}
+          <link rel="stylesheet" href="/stylesheets/{{stylesheet}}">
+      {{/if}}
   </head>
   <body>
     {{{body}}}
