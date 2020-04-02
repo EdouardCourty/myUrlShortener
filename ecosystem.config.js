@@ -30,7 +30,7 @@ module.exports = {
       host : 'edouardcourty.fr',
       ref  : 'origin/master',
       repo : 'http://github.com/EdouardCourty/myUrlShortener',
-      path : '/home/edouard/workspace/myUrlShortener',
+      path : '/var/www/link.edouardcourty.fr',
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
     }
   }
