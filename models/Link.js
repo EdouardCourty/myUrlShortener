@@ -6,6 +6,10 @@ const link = new mongoose.Schema({
   "createdAt": {
     type: Date,
     default: new Date()
+  },
+  "timesVisited": {
+    type: Number,
+    default: 0
   }
 });
 

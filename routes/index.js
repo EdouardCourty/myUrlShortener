@@ -4,11 +4,11 @@ let router = express.Router();
 let { generateId, normalizeUrl } = require("../lib/utils");
 let Link = require("../models/Link");
 
-/* GET home page. */
 router.get('/:uniqueId', (req, res, next) => {
   Link.findOne({ "uniqueId": req.params.uniqueId })
-    .then(doc => {
-      let url = doc.originalLink;
+    .then(async doc => {
+      const url = doc.originalLink;
+      await Link.findOneAndUpdate({ "_id": doc._id }, { "timesVisited": doc.timesVisited + 1 });
       return doc && url
         ? res.redirect(url)
         : next()
@@ -19,12 +19,13 @@ router.get('/:uniqueId', (req, res, next) => {
 router.get("/", (req, res, next) => {
   res.render("index", {
     title: "Shorten a new link"
-  })
+  });
+  next()
 });
 
 router.post("/", (req, res, next) => {
-  let link = req.query.link;
-  let uniqueId = generateId(process.env.UNIQUE_STRINGS_LENGHT);
+  let link = req.body.link;
+  let uniqueId = generateId(process.env.UNIQUE_STRINGS_LENGTH);
 
   let myLink = new Link({
     "originalLink": normalizeUrl(link),
@@ -33,9 +34,8 @@ router.post("/", (req, res, next) => {
 
   myLink.save()
     .then(doc => {
-      res.json({
-        "success": true,
-        "document": doc
+      res.render("result", {
+        shortLink: doc.uniqueId
       })
     })
     .catch(e => {

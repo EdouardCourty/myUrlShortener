@@ -1,9 +1,10 @@
-const express = require('express');
-const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
-const mongoose = require("mongoose");
 const sassMiddleware = require("node-sass-middleware");
+const cookieParser = require('cookie-parser');
+const createError = require('http-errors');
+const mongoose = require("mongoose");
+const express = require('express');
+const logger = require('morgan');
+const path = require('path');
 
 const url = "mongodb://localhost:27017/shortLinks";
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -11,6 +12,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   .catch(console.error);
 
 const indexRouter = require('./routes/index');
+const listRouter = require('./routes/list');
 
 const app = express();
 
@@ -22,6 +24,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),
@@ -29,8 +33,19 @@ app.use(sassMiddleware({
   sourceMap: true
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
-
 app.use('/', indexRouter);
+app.use('/list', listRouter);
+
+app.use((req, res, next) => {
+  next(createError(404));
+});
+
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  res.status(err.status || 500);
+  res.render('error');
+});
 
 module.exports = app;
