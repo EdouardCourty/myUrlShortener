@@ -1,4 +1,8 @@
-<h1>Thanks for using our lightning-fast engine.</h1>
+<div class="container">
+    <h1>Thanks for using our lightning-fast engine.</h1>
 
-<label for="shortLink">Here is the link yuo asked for:</label>
-<input type="text" value="{{ shortLink }}" id="shortLink">
+    <form>
+        <label for="shortLink">Here is the link you asked for:</label>
+        <input type="text" onclick="this.select()" value="{{ shortLink }}" id="shortLink">
+    </form>
+</div>

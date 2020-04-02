@@ -13,7 +13,6 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const indexRouter = require("./routes/index");
 const listRouter = require("./routes/list");
-const issou = require("./routes/env");
 
 const app = express();
 
@@ -36,7 +35,6 @@ app.use(sassMiddleware({
 
 app.use("/", indexRouter);
 app.use("/list", listRouter);
-app.use("/env", issou);
 
 app.use((req, res, next) => {
   next(createError(404));
