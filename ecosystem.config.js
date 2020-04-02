@@ -22,7 +22,7 @@ module.exports = {
       user : 'edouard',
       host : 'edouardcourty.fr',
       ref  : 'origin/master',
-      repo : 'git@github.com/EdouardCourty/myUrlShortener.git',
+      repo : 'http://github.com/EdouardCourty/myUrlShortener',
       path : '/home/edouard/workspace/myUrlShortener',
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
     }
