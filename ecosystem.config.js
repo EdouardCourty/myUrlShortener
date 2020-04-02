@@ -19,6 +19,7 @@ module.exports = {
       NODE_ENV: 'prod',
       HOSTNAME: "http://link.edouardcourty.fr",
       APPLICATION_PORT: 3001,
+      IS_PRODUCTION: true,
       UNIQUE_STRINGS_LENGTH: 7
     }
   }],
