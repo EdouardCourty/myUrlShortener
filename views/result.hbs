@@ -1,8 +1,11 @@
 <div class="container">
     <h1>Thanks for using our lightning-fast engine.</h1>
 
-    <form>
-        <label for="shortLink">Here is the link you asked for:</label>
+    <form id="resultForm">
+        <label for="shortLink">
+            Here is the result of your request
+        </label>
         <input type="text" onclick="this.select()" value="{{ shortLink }}" id="shortLink">
+        <a>Copy the link</a>
     </form>
 </div>

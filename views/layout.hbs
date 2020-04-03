@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en_us">
   <head>
     <title>{{title}}</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
@@ -9,5 +9,8 @@
   </head>
   <body>
     {{{body}}}
+    {{# if script }}
+        <script src="/javascripts/{{ script }}"></script>
+    {{/if}}
   </body>
 </html>

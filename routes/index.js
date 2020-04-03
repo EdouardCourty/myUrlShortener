@@ -35,7 +35,9 @@ router.post("/", (req, res, next) => {
   myLink.save()
     .then(doc => {
       res.render("result", {
-        shortLink: (`${process.env.HOSTNAME}/${doc.uniqueId}`)
+        shortLink: (`${process.env.HOSTNAME}/${doc.uniqueId}`),
+        stylesheet: "result.css",
+        script: "listener.js"
       })
     })
     .catch(e => {

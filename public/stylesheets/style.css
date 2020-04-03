@@ -36,20 +36,40 @@ body .container form {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    opacity: 0.80;
+    transition: 0.3s;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border-radius: 30px;
+}
+
+body .container form:hover{
+    opacity: 1;
+    -webkit-box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.71);
+    -moz-box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.71);
+    box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.71);
 }
 
 body .container form input {
     height: 40px;
     font-size: 18px;
+    -webkit-appearance: none;
+    border: none;
 }
 
 body .container #link {
     flex: 0.75;
     padding-left: 15px;
-    border-radius: 30px;
+    border-radius: 30px 0 0 30px;
 }
 
 body .container #submit {
-    flex: 0.2;
-    -webkit-appearance: none;
+    flex: 0.25;
+    border-radius: 0 30px 30px 0;
+    cursor: pointer;
+}
+
+body .container #link:focus, body .container #submit:focus {
+    outline: none;
 }
