@@ -1,4 +1,3 @@
-const sassMiddleware = require("node-sass-middleware");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const mongoose = require("mongoose");
@@ -25,13 +24,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, "public")));
-
-app.use(sassMiddleware({
-  src: path.join(__dirname, "public"),
-  dest: path.join(__dirname, "public"),
-  indentedSyntax: true, // true = .sass and false = .scss
-  sourceMap: true
-}));
 
 app.use("/", indexRouter);
 app.use("/list", listRouter);
