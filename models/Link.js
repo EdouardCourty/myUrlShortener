@@ -10,7 +10,8 @@ const link = new mongoose.Schema({
   "timesVisited": {
     type: Number,
     default: 0
-  }
+  },
+  "baseString": String
 });
 
 module.exports = mongoose.model("Link", link);

@@ -1,7 +1,7 @@
 const express = require('express');
 let router = express.Router();
 
-let { generateId, normalizeUrl } = require("../lib/utils");
+let { generateId, normalizeUrl, isExisting } = require("../lib/utils");
 let Link = require("../models/Link");
 
 router.get('/:uniqueId', (req, res, next) => {
@@ -23,13 +23,16 @@ router.get("/", (req, res, next) => {
   });
 });
 
-router.post("/", (req, res, next) => {
-  let link = req.body.link;
-  let uniqueId = generateId(process.env.UNIQUE_STRINGS_LENGTH);
+router.post("/", async (req, res, next) => {
+  let link = normalizeUrl(req.body.link);
+  let existing = await isExisting(link);
+
+  let uniqueId = existing ? existing.uniqueId : generateId(process.env.UNIQUE_STRINGS_LENGTH);
 
   let myLink = new Link({
     "originalLink": normalizeUrl(link),
-    "uniqueId": uniqueId
+    "uniqueId": uniqueId,
+    "baseString": link
   });
 
   myLink.save()
@@ -40,9 +43,7 @@ router.post("/", (req, res, next) => {
         script: "listener.js"
       })
     })
-    .catch(e => {
-      next()
-    })
+    .catch(e => next())
 });
 
 module.exports = router;
