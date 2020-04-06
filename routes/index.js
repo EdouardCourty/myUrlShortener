@@ -18,8 +18,8 @@ router.get('/:uniqueId', (req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
-  let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(ip);
+  let ip = req.headers['X-Forwarded-for'] || req.connection.remoteAddress;
+  console.log(ip || req.headers);
   res.render("index", {
     title: "Shorten a new link"
   });
