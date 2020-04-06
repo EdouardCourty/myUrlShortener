@@ -19,7 +19,6 @@ router.get('/:uniqueId', (req, res, next) => {
 
 router.get("/", (req, res, next) => {
   let ip = req.headers['X-Forwarded-for'] || req.connection.remoteAddress;
-  console.log(ip || req.headers);
   res.render("index", {
     title: "Shorten a new link"
   });
@@ -27,7 +26,7 @@ router.get("/", (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   let originalString= req.body.link;
-  let link = normalizeUrl(originalString());
+  let link = normalizeUrl(originalString);
   let existing = await isExisting(link);
 
   let uniqueId = existing ? existing.uniqueId : generateId(process.env.UNIQUE_STRINGS_LENGTH);
