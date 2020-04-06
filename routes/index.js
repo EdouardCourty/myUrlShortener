@@ -34,7 +34,7 @@ router.post("/", async (req, res, next) => {
   let myLink = new Link({
     "originalLink": normalizeUrl(link),
     "uniqueId": uniqueId,
-    "baseString": originalString()
+    "baseString": originalString
   });
 
   myLink.save()
