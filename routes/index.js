@@ -18,13 +18,16 @@ router.get('/:uniqueId', (req, res, next) => {
 });
 
 router.get("/", (req, res, next) => {
+  let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(ip);
   res.render("index", {
     title: "Shorten a new link"
   });
 });
 
 router.post("/", async (req, res, next) => {
-  let link = normalizeUrl(req.body.link);
+  let originalString= req.body.link;
+  let link = normalizeUrl(originalString());
   let existing = await isExisting(link);
 
   let uniqueId = existing ? existing.uniqueId : generateId(process.env.UNIQUE_STRINGS_LENGTH);
@@ -32,7 +35,7 @@ router.post("/", async (req, res, next) => {
   let myLink = new Link({
     "originalLink": normalizeUrl(link),
     "uniqueId": uniqueId,
-    "baseString": link
+    "baseString": originalString()
   });
 
   myLink.save()

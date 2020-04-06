@@ -1,0 +1,31 @@
+.bold {
+    font-weight: bold;
+    width: 160px;
+    display: block;
+}
+
+a {
+    color: white;
+}
+
+.linkList > li {
+    margin: 15px 0;
+}
+
+.linkList {
+    list-style: none;
+}
+
+.linkCard ul li {
+    display: flex;
+    padding: 1px 0;
+}
+
+.linkCardContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.linkCardContainer > span {
+    padding-left: 30px;
+}

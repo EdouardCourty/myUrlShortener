@@ -1,9 +1,18 @@
-<ul>
+<ul class="linkList">
+    <hr>
     {{#each links}}
-        <li>
-            <pre>
-                {{ this }}
-            </pre>
+        <li class="linkCardContainer">
+            <div class="linkCard">
+                <ul>
+                    <li><span class="bold">Original URL</span><a target="_blank" href="{{this.originalLink}}">{{ this.originalLink }}</a></li>
+                    <li><span class="bold">Unique ID</span>{{ this.uniqueId }}</li>
+                    <li><span class="bold">Times visited</span>{{ this.timesVisited }}</li>
+                    <li><span class="bold">Creation Date</span>{{ this.createdAt }}</li>
+                    <li><span class="bold">Base string</span>{{ this.baseString }}</li>
+                </ul>
+            </div>
+            <span class="deleteButton" id="{{ this._id }}">Delete</span>
         </li>
+        <hr>
     {{/each}}
 </ul>

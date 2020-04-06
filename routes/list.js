@@ -6,7 +6,9 @@ let Link = require("../models/Link");
 router.get("/", async (req, res, next) => {
   let links = await Link.find();
   links.map(e => {
-    e.__v = undefined
+    e.__v = undefined;
+    e.originalLink = e.originalLink.substring(0, 80);
+    e.baseString = e.baseString.substring(0, 80);
   });
 
   res.render("list", {
@@ -17,11 +19,12 @@ router.get("/", async (req, res, next) => {
 });
 
 router.post("/delete", (req, res, next) => {
-  let password = req.body.password;
+  let password = req.params.password;
+  console.log(req)
   if (password !== "password" || !password) return res.redirect("/list");
-  let toDelete = req.body.toDelete;
+  let id = req.body.id;
 
-  if (toDelete == "all") {
+  if (id == "all") {
     Link.deleteMany()
       .then(n => {
         return res.json({
@@ -35,8 +38,8 @@ router.post("/delete", (req, res, next) => {
           "error": e
         })
       });
-  } else if (toDelete) {
-    Link.findOneAndDelete({ "_id": toDelete })
+  } else if (id) {
+    Link.findOneAndDelete({ "_id": id })
       .then(doc => {
         return res.json({
           "success": true,
