@@ -14,15 +14,18 @@ router.get("/", async (req, res, next) => {
   res.render("list", {
     title: "List of the links",
     links: links,
-    stylesheet: "list.css"
+    stylesheet: "list.css",
+    script: "deleteListener.js"
   });
 });
 
-router.post("/delete", (req, res, next) => {
-  let password = req.params.password;
-  console.log(req)
-  if (password !== "password" || !password) return res.redirect("/list");
-  let id = req.body.id;
+router.delete("/delete", (req, res, next) => {
+  let password = req.query.password;
+  let id = req.query.id;
+
+  console.log(id, password);
+
+  if (password !== "password" || !password) return res.redirect(303, "/list");
 
   if (id == "all") {
     Link.deleteMany()
@@ -54,7 +57,7 @@ router.post("/delete", (req, res, next) => {
       })
   }
 
-  return res.redirect("/list");
+  return res.redirect(303, "/list");
 });
 
 module.exports = router;
