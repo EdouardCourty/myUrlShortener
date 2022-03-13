@@ -22,7 +22,11 @@ class LinkCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->showEntityActionsInlined();
+            ->showEntityActionsInlined()
+            ->setEntityLabelInSingular('Link')
+            ->setEntityLabelInPlural('Links')
+            ->setPageTitle(Crud::PAGE_INDEX, 'Redirect links')
+            ->setPaginatorPageSize(30);
     }
 
     public function configureActions(Actions $actions): Actions

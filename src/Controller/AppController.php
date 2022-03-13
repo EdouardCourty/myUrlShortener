@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Link;
 use App\Form\LinkFormType;
+use App\Repository\Exception\LinkNotFoundException;
 use App\Repository\LinkRepository;
 use App\Service\UrlHasher;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Throwable;
 
 class AppController extends AbstractController
 {
@@ -60,8 +60,10 @@ class AppController extends AbstractController
 
             $this->linkRepository->add($link);
 
+            $redirectLink = $link->getCustomShortcode() ?: $this->urlHasher->getHasher()->encode($link->getId());
+
             return $this->redirect($this->generateUrl('link_created', [
-                'shortcode' => $this->urlHasher->getHasher()->encode($link->getId())
+                'shortcode' => $redirectLink
             ]));
         }
 
@@ -82,46 +84,30 @@ class AppController extends AbstractController
     #[Route(path: '/link/{shortcode}', name: 'link_created')]
     public function afterSubmissionAction(string $shortcode): Response
     {
-        $linkId = $this->urlHasher->getHasher()->decode($shortcode)[0];
+        try {
+            $link = $this->linkRepository->resolve($shortcode);
 
-        $link = $this->linkRepository->find($linkId);
-
-        if (!$link instanceof Link) {
+            return $this->render('app/link-create-success.html.twig', [
+                'redirectUrl' => $link->getUrl(),
+                'shortcode' => $shortcode
+            ]);
+        } catch (LinkNotFoundException) {
             throw new NotFoundHttpException();
         }
-
-        return $this->render('app/link-create-success.html.twig', [
-            'redirectUrl' => $link->getUrl(),
-            'shortcode' => $shortcode
-        ]);
     }
 
-    #[Route(path: '/{shortcode}', name: 'redirect', priority: -42)]
+    #[Route(path: '/redirect/{shortcode}', name: 'redirect')]
     public function redirectAction(string $shortcode): Response
     {
-        $link = $this->linkRepository->findOneBy([
-            'customShortcode' => $shortcode
-        ]);
-
-        if ($link instanceof Link) {
-            return $this->incrementAndRedirect($link);
-        }
-
         try {
-            $linkId = $this->urlHasher->getHasher()->decode($shortcode)[0];
-        } catch (Throwable) {
-            $this->addFlash('error', sprintf('Could not find a redirect with code %s.', $shortcode));
+            $link = $this->linkRepository->resolve($shortcode);
 
-            return $this->redirectToRoute('homepage');
-        }
-
-        $link = $this->linkRepository->find($linkId);
-
-        if ($link instanceof Link) {
             return $this->incrementAndRedirect($link);
-        }
+        } catch (LinkNotFoundException $exception) {
+            $this->addFlash('error', $exception->getMessage());
 
-        throw new NotFoundHttpException();
+            throw new NotFoundHttpException();
+        }
     }
 
     private function incrementAndRedirect(Link $link): RedirectResponse

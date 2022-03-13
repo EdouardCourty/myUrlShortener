@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Link;
+use App\Repository\Exception\LinkNotFoundException;
+use App\Service\UrlHasher;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Throwable;
 
 /**
  * @method Link|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,8 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class LinkRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(
+        private UrlHasher $urlHasher,
+        ManagerRegistry $registry
+    ) {
         parent::__construct($registry, Link::class);
     }
 
@@ -33,5 +38,31 @@ class LinkRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    /**
+     * @throws LinkNotFoundException
+     */
+    public function resolve(string $shortCode): Link
+    {
+        $link = $this->findOneBy([
+            'customShortcode' => $shortCode
+        ]);
+
+        if ($link instanceof Link) {
+            return $link;
+        }
+
+        try {
+            $linkId = $this->urlHasher->getHasher()->decode($shortCode)[0];
+
+            $link = $this->find($linkId);
+
+            if ($link instanceof Link) {
+                return $link;
+            }
+        } catch (Throwable) {}
+
+        throw LinkNotFoundException::createFromShortcode($shortCode);
     }
 }
