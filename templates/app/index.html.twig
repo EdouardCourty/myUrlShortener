@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My URL Shortener{% endblock %}
+{% block description %}The best URL shortener ever, built with nice HashIds{% endblock %}
+
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{% block body %}
+    <div class="container-xxl">
+        {% if app.session.flashBag.has('error') %}
+            <div class="alert alert-danger">
+                {% for message in app.session.flashBag.get('error') %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <h2>Shorten your URL</h2>
+
+        {{ form(form) }}
+
+        <hr>
+
+        {% if latestLinks|length > 0 %}
+            <p class="h2">Latest redirects created</p>
+
+            <ul class="list-unstyled">
+                {% for link in latestLinks %}
+                <li><a href="{{ link.url }}">{{ link.customShortcode ?? link.shortcode }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No redirects have been created yet.</p>
+        {% endif %}
+    </div>
+
+{% endblock %}

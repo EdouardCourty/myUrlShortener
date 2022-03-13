@@ -8,12 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content="{% block description %}{% endblock %}"/>
 
-    {% block stylesheets %}{% endblock %}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset('style/vendor/bootstrap.min.css') }}">
+    {% endblock %}
 </head>
 
-<body>
+<body class="bg-dark text-light">
+{% block header %}
+    {{ include('partials/header.html.twig') }}
+{% endblock %}
+
 {% block body %}{% endblock %}
 
-{% block javascripts %}{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
+{% endblock %}
 </body>
 </html>
