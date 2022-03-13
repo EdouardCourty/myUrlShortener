@@ -1,0 +1,14 @@
+nelmio_api_doc:
+    documentation:
+        servers:
+            - url: '%app_scheme%://%app_domain%'
+              description: API over HTTP
+
+        info:
+            title: My URL Shortener
+            description: A nice API documentation for a nice URL shortener.
+            version: 1.0.0
+
+    areas: # to filter documented areas
+        host_patterns:
+            - ^api\.

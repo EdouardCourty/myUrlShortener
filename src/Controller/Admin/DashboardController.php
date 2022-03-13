@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route(host: 'admin.%app_domain%')]
 class DashboardController extends AbstractDashboardController
 {
     public function __construct(
@@ -17,7 +18,7 @@ class DashboardController extends AbstractDashboardController
     ) {
     }
 
-    #[Route('/admin', name: 'admin_dashboard')]
+    #[Route('/', name: 'admin_dashboard')]
     public function index(): Response
     {
         return $this->redirect(

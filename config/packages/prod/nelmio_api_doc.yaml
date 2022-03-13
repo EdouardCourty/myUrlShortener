@@ -1,0 +1,5 @@
+nelmio_api_doc:
+  documentation:
+    servers:
+      - description: 'Production endpoint'
+        url: '%app_scheme%://api.%app_domain%'

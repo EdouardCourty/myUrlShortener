@@ -9,12 +9,12 @@ use App\Repository\LinkRepository;
 use App\Service\UrlHasher;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
+#[Route(host: '%app_domain%')]
 class AppController extends AbstractController
 {
     public function __construct(
@@ -102,19 +102,14 @@ class AppController extends AbstractController
         try {
             $link = $this->linkRepository->resolve($shortcode);
 
-            return $this->incrementAndRedirect($link);
+            $link->incrementUsage();
+            $this->entityManager->flush();
+
+            return $this->redirect($link->getUrl());
         } catch (LinkNotFoundException $exception) {
             $this->addFlash('error', $exception->getMessage());
 
             throw new NotFoundHttpException();
         }
-    }
-
-    private function incrementAndRedirect(Link $link): RedirectResponse
-    {
-        $link->incrementUsage();
-        $this->entityManager->flush();
-
-        return $this->redirect($link->getUrl());
     }
 }
