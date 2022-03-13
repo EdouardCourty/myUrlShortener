@@ -14,6 +14,8 @@
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.10",
+        "easycorp/easyadmin-bundle": "^4.0",
+        "hashids/hashids": "^4.1",
         "psr/log": "1.1.4",
         "stof/doctrine-extensions-bundle": "^1.6",
         "symfony/asset": "6.0.*",

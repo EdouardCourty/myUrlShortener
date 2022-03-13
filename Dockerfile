@@ -2,7 +2,7 @@ FROM php:8.1-fpm-bullseye
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/project
+WORKDIR /var/www/shortener
 
 COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/
 COPY docker/php-fpm/php-fpm.conf /usr/local/etc/php-fpm.conf
@@ -36,14 +36,14 @@ RUN docker-php-ext-enable xdebug
 
 RUN (umask 000; touch /var/log/xdebug.log)
 
-RUN useradd -ms /bin/bash project
-RUN usermod -u 1000 project
+RUN useradd -ms /bin/bash shortener
+RUN usermod -u 1000 shortener
 
 RUN touch /var/log/php-fpm.error.log
 RUN touch /var/log/php-fpm.access.log
 
-RUN chown -R project:project /var/log/php-fpm.error.log /var/log/php-fpm.access.log
+RUN chown -R shortener:shortener /var/log/php-fpm.error.log /var/log/php-fpm.access.log
 
-USER project
+USER shortener
 
 CMD ["php-fpm"]
