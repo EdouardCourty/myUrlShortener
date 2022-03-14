@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class LinkFormType extends AbstractType
 {
@@ -22,7 +23,15 @@ class LinkFormType extends AbstractType
             ])
             ->add('customShortcode', TextType::class, [
                 'required' => false,
-                'label' => 'Custom shortcode'
+                'label' => 'Custom shortcode',
+                'constraints' => [
+                    new Length(
+                        min: 5,
+                        max: 255,
+                        minMessage: 'The custom shortcode must be at least 5 characters long.',
+                        maxMessage: 'The custom shortcode must be at most 255 characters long.'
+                    )
+                ]
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Shorten'

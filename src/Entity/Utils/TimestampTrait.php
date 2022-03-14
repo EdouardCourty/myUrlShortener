@@ -6,16 +6,26 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * Trait TimestampTrait.
  */
 trait TimestampTrait
 {
+    #[Expose]
+    #[Groups([
+        'apiGetLink'
+    ])]
     #[Gedmo\Timestampable(on: 'create')]
     #[ORM\Column(type: 'datetime_immutable')]
     protected DateTimeImmutable $createdAt;
 
+    #[Expose]
+    #[Groups([
+        'apiGetLink'
+    ])]
     #[Gedmo\Timestampable(on: 'update')]
     #[ORM\Column(type: 'datetime')]
     protected DateTime $updatedAt;

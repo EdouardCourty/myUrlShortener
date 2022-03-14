@@ -18,20 +18,6 @@
         <h2>Shorten a URL</h2>
 
         {{ form(form) }}
-
-        <hr>
-
-        {% if latestLinks|length > 0 %}
-            <p class="h2">Latest redirects created</p>
-
-            <ul class="list-unstyled">
-                {% for link in latestLinks %}
-                <li><a href="{{ link.url }}">{{ link.customShortcode ?? link.shortcode }}</a></li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No redirects have been created yet.</p>
-        {% endif %}
     </div>
 
 {% endblock %}

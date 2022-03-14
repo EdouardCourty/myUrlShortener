@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Link;
+use App\Exception\Repository\LinkNotFoundException;
 use App\Form\LinkFormType;
-use App\Repository\Exception\LinkNotFoundException;
 use App\Repository\LinkRepository;
 use App\Service\UrlHasher;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,52 +33,29 @@ class AppController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($link->getCustomShortcode() === null) {
-                $existingLink = $this->linkRepository->findOneBy([
-                    'url' => $link->getUrl()
-                ]);
+            $existingLink = $this->linkRepository->findOneBy([
+                'url' => $link->getUrl()
+            ]);
 
-                if ($existingLink instanceof Link) {
-                    return $this->redirect($this->generateUrl('link_created', [
-                        'shortcode' => $this->urlHasher->getHasher()->encode($existingLink->getId())
-                    ]));
-                }
-            } else {
-                $existingShortcodedLink = $this->linkRepository->findOneBy([
-                    'customShortcode' => $link->getCustomShortcode()
-                ]);
-
-                if ($existingShortcodedLink instanceof Link) {
-                    $this->addFlash('error', sprintf(
-                        'The %s shortcode is already in use, please chose another one.',
-                        $link->getCustomShortcode()
-                    ));
-
-                    return $this->redirectToRoute('homepage');
-                }
+            if ($existingLink instanceof Link) {
+                return $this->redirectToLinkPage($this->urlHasher->getHasher()->encode($existingLink->getId()));
             }
 
             $this->linkRepository->add($link);
 
-            $redirectLink = $link->getCustomShortcode() ?: $this->urlHasher->getHasher()->encode($link->getId());
-
-            return $this->redirect($this->generateUrl('link_created', [
-                'shortcode' => $redirectLink
-            ]));
+            return $this->redirectToLinkPage($link->getCustomShortcode() ?? $this->urlHasher->getHasher()->encode($link->getId()));
         }
 
-        $latestLinks = $this->linkRepository->findBy([], ['id' => 'DESC'], 12);
-
-        $formattedLatestLinks = array_map(fn (Link $link) => [
-            'shortcode' => $this->urlHasher->getHasher()->encode($link->getId()),
-            'url' => $link->getUrl(),
-            'customShortcode' => $link->getCustomShortcode()
-        ], $latestLinks);
-
         return $this->render('app/index.html.twig', [
-            'form' => $form->createView(),
-            'latestLinks' => $formattedLatestLinks
+            'form' => $form->createView()
         ]);
+    }
+
+    private function redirectToLinkPage(string $redirectCode): Response
+    {
+        return $this->redirect($this->generateUrl('link_created', [
+            'shortcode' => $redirectCode
+        ]));
     }
 
     #[Route(path: '/link/{shortcode}', name: 'link_created')]

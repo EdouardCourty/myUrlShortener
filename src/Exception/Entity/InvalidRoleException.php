@@ -1,6 +1,9 @@
 <?php
 
+namespace App\Exception\Entity;
+
 use App\Entity\User;
+use Exception;
 
 class InvalidRoleException extends Exception
 {

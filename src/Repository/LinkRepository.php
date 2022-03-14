@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Link;
-use App\Repository\Exception\LinkNotFoundException;
+use App\Exception\Repository\LinkNotFoundException;
 use App\Service\UrlHasher;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;

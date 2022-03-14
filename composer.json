@@ -16,6 +16,7 @@
         "doctrine/orm": "^2.10",
         "easycorp/easyadmin-bundle": "^4.0",
         "hashids/hashids": "^4.1",
+        "jms/serializer-bundle": "^4.0",
         "nelmio/api-doc-bundle": "^4.8",
         "psr/log": "1.1.4",
         "stof/doctrine-extensions-bundle": "^1.6",
