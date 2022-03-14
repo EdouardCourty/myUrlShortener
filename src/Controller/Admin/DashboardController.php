@@ -22,7 +22,7 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         return $this->redirect(
-            $this->adminUrlGenerator->setController(LinkCrudController::class)->set('menuIndex', 2)->generateUrl()
+            $this->adminUrlGenerator->setController(LinkCrudController::class)->set('menuIndex', 4)->generateUrl()
         );
     }
 
@@ -34,7 +34,10 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
+        yield MenuItem::section('Internal links');
+
         yield MenuItem::linkToUrl('Public homepage', 'fa fa-home', $this->generateUrl('homepage'));
+        yield MenuItem::linkToUrl('API Docs', 'fa fa-book', $this->generateUrl('app.swagger'));
 
         yield MenuItem::section('CRUD');
 
