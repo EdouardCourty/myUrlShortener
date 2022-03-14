@@ -39,6 +39,10 @@ class ApiController extends AbstractController
         return $this->json($this->linkNormalizer->normalize($link));
     }
 
+    /**
+     * @throws JsonException
+     * @OA\Tag(name="Link")
+     */
     #[Route(path: '/links/new', name: 'api_create_redirect', methods: ['POST'])]
     public function createRedirectionAction(Request $request): JsonResponse
     {
