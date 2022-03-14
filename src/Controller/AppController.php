@@ -37,7 +37,7 @@ class AppController extends AbstractController
                 'url' => $link->getUrl()
             ]);
 
-            if ($existingLink instanceof Link) {
+            if ($existingLink instanceof Link && !$link->getCustomShortcode()) {
                 return $this->redirectToLinkPage($this->urlHasher->getHasher()->encode($existingLink->getId()));
             }
 
@@ -53,12 +53,12 @@ class AppController extends AbstractController
 
     private function redirectToLinkPage(string $redirectCode): Response
     {
-        return $this->redirect($this->generateUrl('link_created', [
+        return $this->redirect($this->generateUrl('link_view', [
             'shortcode' => $redirectCode
         ]));
     }
 
-    #[Route(path: '/link/{shortcode}', name: 'link_created')]
+    #[Route(path: '/link/{shortcode}', name: 'link_view')]
     public function afterSubmissionAction(string $shortcode): Response
     {
         try {
