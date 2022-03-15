@@ -61,8 +61,33 @@ class LinkRepository extends ServiceEntityRepository
             if ($link instanceof Link) {
                 return $link;
             }
-        } catch (Throwable) {}
+        } catch (Throwable) {
+        }
 
         throw LinkNotFoundException::createFromShortcode($shortCode);
+    }
+
+    public function isShortcodeAvailable(string $shortCode): bool
+    {
+        $link = $this->findOneBy([
+            'customShortcode' => $shortCode
+        ]);
+
+        if ($link instanceof Link) {
+            return false;
+        }
+
+        try {
+            $linkId = $this->urlHasher->getHasher()->decode($shortCode)[0];
+
+            $link = $this->find($linkId);
+
+            if ($link instanceof Link) {
+                return false;
+            }
+        } catch (Throwable) {
+        }
+
+        return true;
     }
 }

@@ -9,6 +9,7 @@ use App\Repository\LinkRepository;
 use App\Service\UrlHasher;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -33,17 +34,27 @@ class AppController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $customShortcode = $link->getCustomShortcode();
+
+            if ($customShortcode !== null && !$this->linkRepository->isShortcodeAvailable($customShortcode)) {
+                $form->addError(new FormError('This custom shortcode is already in use.'));
+
+                return $this->render('app/index.html.twig', [
+                    'form' => $form->createView()
+                ]);
+            }
+
             $existingLink = $this->linkRepository->findOneBy([
                 'url' => $link->getUrl()
             ]);
 
-            if ($existingLink instanceof Link && !$link->getCustomShortcode()) {
+            if ($existingLink instanceof Link && !$customShortcode) {
                 return $this->redirectToLinkPage($this->urlHasher->getHasher()->encode($existingLink->getId()));
             }
 
             $this->linkRepository->add($link);
 
-            return $this->redirectToLinkPage($link->getCustomShortcode() ?? $this->urlHasher->getHasher()->encode($link->getId()));
+            return $this->redirectToLinkPage($customShortcode ?? $this->urlHasher->getHasher()->encode($link->getId()));
         }
 
         return $this->render('app/index.html.twig', [
