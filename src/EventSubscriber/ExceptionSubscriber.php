@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Exception\Api\ShortcodeAlreadyInUseException;
 use App\Exception\Repository\LinkNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
@@ -46,8 +47,9 @@ class ExceptionSubscriber implements EventSubscriberInterface
                 break;
         }
 
-        $status = match(get_class($exception)) {
+        $status = match (get_class($exception)) {
             NotFoundHttpException::class, LinkNotFoundException::class => Response::HTTP_NOT_FOUND,
+            ShortcodeAlreadyInUseException::class => Response::HTTP_CONFLICT,
             InvalidArgumentException::class => Response::HTTP_BAD_REQUEST,
             default => Response::HTTP_INTERNAL_SERVER_ERROR
         };

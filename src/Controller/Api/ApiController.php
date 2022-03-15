@@ -3,6 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Entity\Link;
+use App\Exception\Api\ShortcodeAlreadyInUseException;
 use App\Exception\Repository\LinkNotFoundException;
 use App\Form\LinkFormType;
 use App\Normalizer\LinkNormalizer;
@@ -40,7 +41,7 @@ class ApiController extends AbstractController
     }
 
     /**
-     * @throws JsonException
+     * @throws JsonException|ShortcodeAlreadyInUseException
      * @OA\Tag(name="Link")
      */
     #[Route(path: '/links/new', name: 'api_create_redirect', methods: ['POST'])]
@@ -57,6 +58,12 @@ class ApiController extends AbstractController
         $form->submit($data, true);
 
         if ($form->isValid()) {
+            $customShortcode = $link->getCustomShortcode();
+
+            if ($customShortcode !== null && !$this->linkRepository->isShortcodeAvailable($customShortcode)) {
+                throw ShortcodeAlreadyInUseException::createFromShortcode($customShortcode);
+            }
+
             $existingLink = $this->linkRepository->findOneBy([
                 'url' => $link->getUrl()
             ]);
